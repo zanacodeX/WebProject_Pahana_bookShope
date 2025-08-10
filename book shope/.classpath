@@ -19,5 +19,7 @@
 	<classpathentry kind="lib" path="C:/Users/Dell/Desktop/pdfbox-2.0.34.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dell/Desktop/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dell/Desktop/fontbox-2.0.34.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dell/Desktop/javax.mail-1.6.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dell/Desktop/javax.activation-1.2.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

@@ -17,7 +17,17 @@ public class Order {
     private String customerName;
     private String status;
     
-    public int getOrderId() {
+    private String customerEmail;
+    
+    
+    
+    public String getCustomerEmail() {
+		return customerEmail;
+	}
+	public void setCustomerEmail(String customerEmail) {
+		this.customerEmail = customerEmail;
+	}
+	public int getOrderId() {
 		return orderId;
 	}
 	public void setOrderId(int orderId) {

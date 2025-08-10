@@ -73,10 +73,13 @@ public class OrderDAO {
     // Get all pending orders with customer name
     public List<Order> getPendingOrders() throws Exception {
         List<Order> list = new ArrayList<>();
-        String sql = "SELECT o.*, c.name AS customer_name " +
-                     "FROM orders o " +
-                     "JOIN customers c ON o.customer_id = c.customer_id " +
-                     "WHERE o.order_status = 'Pending'";
+        String sql = "SELECT o.*, " +
+                "       c.name AS customer_name, " +
+                "       u.email AS email " +
+                "FROM orders o " +
+                "JOIN customers c ON o.customer_id = c.customer_id " +
+                "JOIN users u ON c.user_id = u.user_id " + // join users table
+                "WHERE o.order_status = 'Pending'";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -94,6 +97,7 @@ public class OrderDAO {
                 o.setOrderStatus(rs.getString("order_status"));
                 o.setPaymentStatus(rs.getString("payment_status"));
                 o.setCustomerName(rs.getString("customer_name"));
+                o.setCustomerEmail(rs.getString("email"));
                 list.add(o);
             }
         }
@@ -191,10 +195,11 @@ public class OrderDAO {
  // Get order details by ID (for bill printing)
     public Order getOrderById(int orderId) throws Exception {
         Order order = null;
-        String sql = "SELECT o.*, c.name AS customer_name " +
-                     "FROM orders o " +
-                     "JOIN customers c ON o.customer_id = c.customer_id " +
-                     "WHERE o.id = ?";
+        String sql = "SELECT o.*, c.name AS customer_name, u.email AS email " +
+                "FROM orders o " +
+                "JOIN customers c ON o.customer_id = c.customer_id " +
+                "JOIN users u ON c.user_id = u.user_id " +
+                "WHERE o.id = ?";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, orderId);
@@ -212,7 +217,7 @@ public class OrderDAO {
                     order.setOrderStatus(rs.getString("order_status"));
                     order.setPaymentStatus(rs.getString("payment_status"));
                     order.setCustomerName(rs.getString("customer_name"));
-                   // order.setCustomerEmail(rs.getString("email"));
+                    order.setCustomerEmail(rs.getString("email"));
                    // order.setCustomerAddress(rs.getString("address"));
                 }
             }
