@@ -45,7 +45,7 @@
         width: 320px;
         position: relative;
     }
-
+    
     input[type="text"],
     input[type="password"] {
         width: 100%;

@@ -38,9 +38,19 @@ public class UpdateOrderStatusServlet extends HttpServlet {
 
                 String subject = "Your order #" + orderId + " has been " + newStatus ;
                 					
-                String body = "Dear " + customerName + ",\n\n" +
-                        "Your order with ID " + orderId + " has been " + newStatus + ".\n" +
-                        "Thank you for shopping with us.\n\nBest regards,\nBookshop Team";
+               
+                
+                String body;
+                if ("accepted".equalsIgnoreCase(newStatus)) {
+                    body = "Dear " + customerName + ",\n\n" +
+                           "Your order with ID " + orderId + " has been accepted.\n" +
+                           "Please pay the bill for your confirmed order.\n\n" +
+                           "Thank you for shopping with us.\n\nBest regards,\nPahana Edu";
+                } else {
+                    body = "Dear " + customerName + ",\n\n" +
+                           "Your order with ID " + orderId + " has been " + newStatus + ".\n" +
+                           "Thank you for shopping with us.\n\nBest regards,\nPahana Edu";
+                }
 
                 sendEmail(toEmail, subject, body);
             }
@@ -70,7 +80,7 @@ public class UpdateOrderStatusServlet extends HttpServlet {
 
         Message msg = new MimeMessage(session);
         try {
-            msg.setFrom(new InternetAddress(fromEmail, "Bookshop Team"));
+            msg.setFrom(new InternetAddress(fromEmail, "Pahana Edu"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
