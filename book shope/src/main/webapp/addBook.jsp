@@ -23,13 +23,7 @@
         <input type="text" name="author" required>
 
         <label>Category:</label><br>
-<select name="category" required>
-    <option value="Education">Education</option>
-    <option value="Fiction">Fiction</option>
-    <option value="Children">Children</option>
-    <option value="Technology">Technology</option>
-    <!-- Add more categories as needed -->
-</select><br><br>
+<input type="text" name="category" required>
 
         <label>Price:</label>
         <input type="number" name="price" step="0.01" required>

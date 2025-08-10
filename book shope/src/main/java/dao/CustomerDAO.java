@@ -3,6 +3,8 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import dto.Customer;
 import model.DBConnection;
@@ -21,6 +23,96 @@ public class CustomerDAO {
             ps.executeUpdate();
         }
     }
+    
+    
+ // Get all customers
+    public List<Customer> getAllCustomers() throws Exception {
+        List<Customer> customers = new ArrayList<>();
+        String sql = "SELECT * FROM customers";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Customer c = new Customer();
+                c.setCustomerId(rs.getInt("customer_id"));
+                c.setUserId(rs.getInt("user_id"));
+                c.setAccountNumber(rs.getString("account_number"));
+                c.setName(rs.getString("name"));
+                c.setAddress(rs.getString("address"));
+                c.setPhone(rs.getString("phone"));
+                c.setUnitsConsumed(rs.getInt("units_consumed"));
+                customers.add(c);
+            }
+        }
+        return customers;
+    }
+
+    // Update a customer
+    public boolean updateCustomer(Customer customer) throws Exception {
+        String sql = "UPDATE customers SET account_number = ?, name = ?, address = ?, phone = ?, units_consumed = ? WHERE customer_id = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, customer.getAccountNumber());
+            ps.setString(2, customer.getName());
+            ps.setString(3, customer.getAddress());
+            ps.setString(4, customer.getPhone());
+            ps.setInt(5, customer.getUnitsConsumed());
+            ps.setInt(6, customer.getCustomerId());
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
+        }
+    }
+
+   
+
+    //new delete function
+    
+    public boolean deleteCustomerAndUser(int customerId) throws Exception {
+        String getUserIdSQL = "SELECT user_id FROM customers WHERE customer_id = ?";
+        String deleteCustomerSQL = "DELETE FROM customers WHERE customer_id = ?";
+        String deleteUserSQL = "DELETE FROM users WHERE user_id = ?";
+
+        try (Connection con = DBConnection.getConnection()) {
+            con.setAutoCommit(false);  // start transaction
+
+            int userId;
+
+            // 1) Get user_id related to customer
+            try (PreparedStatement ps = con.prepareStatement(getUserIdSQL)) {
+                ps.setInt(1, customerId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        userId = rs.getInt("user_id");
+                    } else {
+                        con.rollback();
+                        throw new Exception("No customer found with ID " + customerId);
+                    }
+                }
+            }
+
+            // 2) Delete customer
+            try (PreparedStatement ps = con.prepareStatement(deleteCustomerSQL)) {
+                ps.setInt(1, customerId);
+                ps.executeUpdate();
+            }
+
+            // 3) Delete user
+            try (PreparedStatement ps = con.prepareStatement(deleteUserSQL)) {
+                ps.setInt(1, userId);
+                ps.executeUpdate();
+            }
+
+            con.commit();
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    
+    
     
     //get custom id by u id
     
