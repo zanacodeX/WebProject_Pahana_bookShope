@@ -30,6 +30,34 @@ public class OrderDAO {
             stmt.executeUpdate();
         }
     }
+    
+    //compketed
+    
+    public List<Order> getCompletedOrdersByCustomerId(int customerId) throws Exception {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM orders WHERE customer_id = ? AND payment_status = 'Paid'";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order order = new Order();
+                order.setId(rs.getInt("id"));
+                order.setCustomerId(rs.getInt("customer_id"));
+                order.setBookId(rs.getInt("book_id"));
+                order.setBookName(rs.getString("book_name"));   // you had it commented in earlier code
+                order.setAuthor(rs.getString("author"));
+                order.setUnitPrice(rs.getDouble("unit_price"));
+                order.setQuantity(rs.getInt("quantity"));
+                order.setTotal(rs.getDouble("total"));
+                order.setOrderStatus(rs.getString("order_status"));
+                order.setPaymentStatus(rs.getString("payment_status"));
+                orders.add(order);
+            }
+        }
+        return orders;
+    }
 
     // Update order status (Confirm or Decline)
     public void updateOrderStatus(int orderId, String newStatus) throws Exception {
@@ -64,7 +92,7 @@ public class OrderDAO {
                 o.setUnitPrice(rs.getDouble("unit_price"));
                 o.setTotal(rs.getDouble("total"));
                 o.setOrderStatus(rs.getString("order_status"));
-               // o.setPaymentStatus(rs.getString("payment_status"));
+                o.setPaymentStatus(rs.getString("payment_status"));
                 o.setCustomerName(rs.getString("customer_name"));
                 list.add(o);
             }
@@ -128,6 +156,10 @@ public class OrderDAO {
 
         return orders;
     }
+    
+    //get customer completed order
+    
+   
 
     //payed update
     
@@ -141,6 +173,8 @@ public class OrderDAO {
     }
     
     
+    
+    
     public void updatePaymentStatus(int orderId, String status) {
         String sql = "UPDATE orders SET payment_status=? WHERE id=?";
         try (Connection con = DBConnection.getConnection();
@@ -151,6 +185,39 @@ public class OrderDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    
+ // Get order details by ID (for bill printing)
+    public Order getOrderById(int orderId) throws Exception {
+        Order order = null;
+        String sql = "SELECT o.*, c.name AS customer_name, c.email, c.address " +
+                     "FROM orders o " +
+                     "JOIN customers c ON o.customer_id = c.customer_id " +
+                     "WHERE o.id = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    order = new Order();
+                    order.setId(rs.getInt("id"));
+                    order.setCustomerId(rs.getInt("customer_id"));
+                    order.setBookId(rs.getInt("book_id"));
+                    order.setBookName(rs.getString("book_name"));
+                    order.setAuthor(rs.getString("author"));
+                    order.setUnitPrice(rs.getDouble("unit_price"));
+                    order.setQuantity(rs.getInt("quantity"));
+                    order.setTotal(rs.getDouble("total"));
+                    order.setOrderStatus(rs.getString("order_status"));
+                    order.setPaymentStatus(rs.getString("payment_status"));
+                    order.setCustomerName(rs.getString("customer_name"));
+                   // order.setCustomerEmail(rs.getString("email"));
+                   // order.setCustomerAddress(rs.getString("address"));
+                }
+            }
+        }
+        return order;
     }
     
     // Search pending orders by customer name (case-insensitive)

@@ -118,7 +118,7 @@
     <div>
         <a href="customerDashboard.jsp">Dashboard</a>
         <a href="customerOrderStatus"> Orders Status</a>
-        <a href="completedOrders.jsp">Completed Orders</a>
+        <a href="completedOrders">Completed Orders</a>
     </div>
     <div>
         <!-- Always show Profile link -->
