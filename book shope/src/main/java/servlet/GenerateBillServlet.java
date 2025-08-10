@@ -67,92 +67,139 @@ public class GenerateBillServlet extends HttpServlet {
                     getServletContext().getRealPath("/image/paid.png"), document);
 
             PDPageContentStream content = new PDPageContentStream(document, page);
+            
 
+            float pageWidth = page.getMediaBox().getWidth();
+            float pageHeight = page.getMediaBox().getHeight();
+
+            // Margin and spacing
             float margin = 50;
-            float yStart = page.getMediaBox().getHeight() - margin;
+            float yPosition = pageHeight - margin;
 
-            // Draw logo top-left
-            content.drawImage(logoImage, margin, yStart - 60, 80, 50);
+            // Draw logo centered at top
+            float logoWidth = 120;
+            float logoHeight = 80;
+            float logoX = (pageWidth - logoWidth) / 2;
+            content.drawImage(logoImage, logoX, yPosition - logoHeight, logoWidth, logoHeight);
 
-            // Company name
+            // Shop name - centered below logo
+            String shopName = "PAHANA BOOK SHOPE";
+            float shopNameFontSize = 24;
+            float shopNameWidth = fontBold.getStringWidth(shopName) / 1000 * shopNameFontSize;
+            float shopNameX = (pageWidth - shopNameWidth) / 2;
+            float shopNameY = yPosition - logoHeight - 30;
+
             content.beginText();
-            content.setFont(fontBold, 20);
-            content.newLineAtOffset(margin + 90, yStart - 20);
-            content.showText("PAHANA BOOK SHOPE");
+            content.setFont(fontBold, shopNameFontSize);
+            content.newLineAtOffset(shopNameX, shopNameY);
+            content.showText(shopName);
             content.endText();
 
-            // Company address
+            // Shop address - centered below shop name
+            String shopAddress = "Main street, Kuruwita, Rathnapura";
+            float shopAddressFontSize = 14;
+            float shopAddressWidth = fontRegular.getStringWidth(shopAddress) / 1000 * shopAddressFontSize;
+            float shopAddressX = (pageWidth - shopAddressWidth) / 2;
+            float shopAddressY = shopNameY - 25;
+
             content.beginText();
-            content.setFont(fontRegular, 12);
-            content.newLineAtOffset(margin + 90, yStart - 40);
-            content.showText("Main street, Kuruwita, Rathnapura");
+            content.setFont(fontRegular, shopAddressFontSize);
+            content.newLineAtOffset(shopAddressX, shopAddressY);
+            content.showText(shopAddress);
             content.endText();
 
-            // Title - centered
+            // Title "Book Invoice" centered below shop address
             String title = "Book Invoice";
-            float titleWidth = fontBold.getStringWidth(title) / 1000 * 18;
-            float centerX = (page.getMediaBox().getWidth() - titleWidth) / 2;
+            float titleFontSize = 22;
+            float titleWidth = fontBold.getStringWidth(title) / 1000 * titleFontSize;
+            float titleX = (pageWidth - titleWidth) / 2;
+            float titleY = shopAddressY - 50;
 
             content.beginText();
-            content.setFont(fontBold, 18);
-            content.newLineAtOffset(centerX, yStart - 100);
+            content.setFont(fontBold, titleFontSize);
+            content.newLineAtOffset(titleX, titleY);
             content.showText(title);
             content.endText();
 
-            // Draw rectangle around order details
-            float boxY = yStart - 140;
+            // Draw rectangle for order details filling more vertical space
+            float boxMarginX = margin;
+            float boxWidth = pageWidth - 2 * margin;
+            float boxMarginTop = titleY - 20;
+            float boxHeight = 250;  // taller box to use more space
+
             content.setLineWidth(1f);
-            content.addRect(margin, boxY - 150, page.getMediaBox().getWidth() - 2 * margin, 150);
+            content.addRect(boxMarginX, boxMarginTop - boxHeight, boxWidth, boxHeight);
             content.stroke();
 
-            // Draw order details inside the rectangle
-            float textY = boxY - 20;
-            float labelX = margin + 10;
-            float valueX = margin + 150;
+            // Write order details inside rectangle spaced out vertically
+            float textStartXLabel = boxMarginX + 15;
+            float textStartXValue = boxMarginX + 180;
+            float textY = boxMarginTop - 30;
+            float lineSpacing = 35;
 
-            drawLabelValue(content, fontBold, fontRegular, "Order ID:", String.valueOf(order.getId()), labelX, valueX, textY);
-            textY -= 20;
-            drawLabelValue(content, fontBold, fontRegular, "Book Name:", order.getBookName(), labelX, valueX, textY);
-            textY -= 20;
-            drawLabelValue(content, fontBold, fontRegular, "Author:", order.getAuthor(), labelX, valueX, textY);
-            textY -= 20;
-            drawLabelValue(content, fontBold, fontRegular, "Unit Price:", "rs" + order.getUnitPrice(), labelX, valueX, textY);
-            textY -= 20;
-            drawLabelValue(content, fontBold, fontRegular, "Quantity:", String.valueOf(order.getQuantity()), labelX, valueX, textY);
-            textY -= 20;
-            drawLabelValue(content, fontBold, fontRegular, "Total:", "rs" + order.getTotal(), labelX, valueX, textY);
+            drawLabelValue(content, fontBold, fontRegular, "Order ID:", String.valueOf(order.getId()), textStartXLabel, textStartXValue, textY);
+            textY -= lineSpacing;
+            drawLabelValue(content, fontBold, fontRegular, "Book Name:", order.getBookName(), textStartXLabel, textStartXValue, textY);
+            textY -= lineSpacing;
+            drawLabelValue(content, fontBold, fontRegular, "Author:", order.getAuthor(), textStartXLabel, textStartXValue, textY);
+            textY -= lineSpacing;
+            drawLabelValue(content, fontBold, fontRegular, "Unit Price:", "Rs " + order.getUnitPrice(), textStartXLabel, textStartXValue, textY);
+            textY -= lineSpacing;
+            drawLabelValue(content, fontBold, fontRegular, "Quantity:", String.valueOf(order.getQuantity()), textStartXLabel, textStartXValue, textY);
+            textY -= lineSpacing;
+            drawLabelValue(content, fontBold, fontRegular, "Total:", "Rs " + order.getTotal(), textStartXLabel, textStartXValue, textY);
 
-            // Footer message
+            // Footer message centered at bottom
+            String footer = "Thank you for your purchase!";
+            float footerFontSize = 12;
+            float footerWidth = fontRegular.getStringWidth(footer) / 1000 * footerFontSize;
+            float footerX = (pageWidth - footerWidth) / 2;
+            float footerY = margin;
+
             content.beginText();
-            content.setFont(fontRegular, 10);
-            content.newLineAtOffset(margin, 50);
-            content.showText("Thank you for your purchase!");
+            content.setFont(fontRegular, footerFontSize);
+            content.newLineAtOffset(footerX, footerY);
+            content.showText(footer);
             content.endText();
 
-            // Show "PAID" seal only if payment status is "paid" (case-insensitive)
+            // Draw "PAID" seal as light watermark if payment status = "paid"
             if (order.getPaymentStatus() != null && order.getPaymentStatus().equalsIgnoreCase("paid")) {
-                float sealX = page.getMediaBox().getWidth() - 200;
-                float sealY = 200;
-                content.drawImage(paidSeal, sealX, sealY, 120, 60);
+                // Save graphics state
+                content.saveGraphicsState();
+
+                // Set transparency to low (e.g., 20%)
+                content.setNonStrokingColor(0.2f);
+
+                // Position watermark roughly center of page, big size
+                float sealWidth = 200;
+                float sealHeight = 100;
+                float sealX = (pageWidth - sealWidth) / 2;
+             // Place seal just below the order details box (some padding 20)
+                float sealY = boxMarginTop - boxHeight - sealHeight - 20;
+
+                content.drawImage(paidSeal, sealX, sealY, sealWidth, sealHeight);
+
+
+                // Restore graphics state
+                content.restoreGraphicsState();
             }
 
             content.close();
             document.save(response.getOutputStream());
-        }
-    }
+            
+        }}
+	private void drawLabelValue(PDPageContentStream content, PDType0Font bold, PDType0Font regular,
+            String label, String value, float labelX, float valueX, float y) throws IOException {
+content.beginText();
+content.setFont(bold, 12);
+content.newLineAtOffset(labelX, y);
+content.showText(label);
+content.endText();
 
-    private void drawLabelValue(PDPageContentStream content, PDType0Font bold, PDType0Font regular,
-                                String label, String value, float labelX, float valueX, float y) throws IOException {
-        content.beginText();
-        content.setFont(bold, 12);
-        content.newLineAtOffset(labelX, y);
-        content.showText(label);
-        content.endText();
-
-        content.beginText();
-        content.setFont(regular, 12);
-        content.newLineAtOffset(valueX, y);
-        content.showText(value);
-        content.endText();
-    }
+content.beginText();
+content.setFont(regular, 12);
+content.newLineAtOffset(valueX, y);
+content.showText(value);
+content.endText();
+}
 }
