@@ -191,7 +191,7 @@ public class OrderDAO {
  // Get order details by ID (for bill printing)
     public Order getOrderById(int orderId) throws Exception {
         Order order = null;
-        String sql = "SELECT o.*, c.name AS customer_name, c.email, c.address " +
+        String sql = "SELECT o.*, c.name AS customer_name " +
                      "FROM orders o " +
                      "JOIN customers c ON o.customer_id = c.customer_id " +
                      "WHERE o.id = ?";

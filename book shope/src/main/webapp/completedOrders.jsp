@@ -66,7 +66,7 @@
                 <td><%= order.getOrderStatus() %></td>
                 <td><%= order.getPaymentStatus() %></td>
                 <td>
-                    <form action="generateBill" method="post" style="margin:0;">
+                    <form action="GenerateBillServlet" method="post" style="margin:0;">
                         <input type="hidden" name="orderId" value="<%= order.getId() %>" />
                         <button type="submit" class="btn-print">Print Bill</button>
                     </form>

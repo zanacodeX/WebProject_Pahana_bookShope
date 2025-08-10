@@ -16,5 +16,8 @@
 	<classpathentry kind="lib" path="C:/Users/Dell/Desktop/JAR Files/javax.servlet-3.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dell/Desktop/JAR Files/mysql-connector-java-5.1.48-bin.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dell/Desktop/JAR Files/servlet-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dell/Desktop/pdfbox-2.0.34.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dell/Desktop/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dell/Desktop/fontbox-2.0.34.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
