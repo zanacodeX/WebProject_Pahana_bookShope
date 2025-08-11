@@ -58,7 +58,66 @@ public class OrderDAO {
         }
         return orders;
     }
+    
+    //payment history
+    
+    public List<Order> getAllPaidOrders() throws Exception {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM orders WHERE payment_status = 'Paid'";
 
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setId(rs.getInt("id"));
+                order.setCustomerId(rs.getInt("customer_id"));
+                order.setBookId(rs.getInt("book_id"));
+                order.setBookName(rs.getString("book_name"));
+                order.setAuthor(rs.getString("author"));
+                order.setUnitPrice(rs.getDouble("unit_price"));
+                order.setQuantity(rs.getInt("quantity"));
+                order.setTotal(rs.getDouble("total"));
+                order.setOrderStatus(rs.getString("order_status"));
+                order.setPaymentStatus(rs.getString("payment_status"));
+                // No customer name/email because we are not joining other tables
+                orders.add(order);
+            }
+        }
+        return orders;
+    }
+    
+    
+    //aa order details
+    
+    public List<Order> getAllOrders() throws Exception {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM orders ";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setId(rs.getInt("id"));
+                order.setCustomerId(rs.getInt("customer_id"));
+                order.setBookId(rs.getInt("book_id"));
+                order.setBookName(rs.getString("book_name"));
+                order.setAuthor(rs.getString("author"));
+                order.setUnitPrice(rs.getDouble("unit_price"));
+                order.setQuantity(rs.getInt("quantity"));
+                order.setTotal(rs.getDouble("total"));
+                order.setOrderStatus(rs.getString("order_status"));
+                order.setPaymentStatus(rs.getString("payment_status"));
+                // No customer name/email because we are not joining other tables
+                orders.add(order);
+            }
+        }
+        return orders;
+    }
+    
     // Update order status (Confirm or Decline)
     public void updateOrderStatus(int orderId, String newStatus) throws Exception {
         String sql = "UPDATE orders SET order_status = ? WHERE id = ?";

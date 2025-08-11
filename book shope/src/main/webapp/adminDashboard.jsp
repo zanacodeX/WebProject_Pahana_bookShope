@@ -46,8 +46,9 @@
     <a href="#dashboard">Dashboard</a>
     <a href="manageBooks.jsp">Manage Books</a>
     <a href="manageBookings.jsp">Manage Bookings</a>
-    <a href="#bills">Bills</a>
+    <a href="BillServlet">Bills</a>
     <a href="manageCustomers.jsp">Customer Manager</a>
+    <a href="AllOrderData">all orders</a>
 </nav>
 
 <section id="dashboard">
@@ -74,6 +75,11 @@
 <section id="customerManager">
     <h2>Customer Manager</h2>
     <p>View and manage registered customers.</p>
+</section>
+
+<section id="allorders">
+    <h2>order data</h2>
+    <p>View all orders an history.</p>
 </section>
 
 
