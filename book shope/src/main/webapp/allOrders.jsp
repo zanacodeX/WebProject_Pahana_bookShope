@@ -4,7 +4,7 @@
 
 <section id="allorders">
     <h2>ALL ORDERS</h2>
-    <p>All Orders And Order history.</p>
+    <p>All Orders AND Order history.</p>
 
     <table border="1" cellpadding="5" cellspacing="0">
         <thead>
