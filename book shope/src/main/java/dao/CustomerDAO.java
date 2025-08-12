@@ -46,9 +46,49 @@ public class CustomerDAO {
         }
         return customers;
     }
+    
+    //update custom new
+    
+    public boolean updateCustomer(Customer customer) throws Exception {
+        String sql = "UPDATE customers SET account_number=?, name=?, address=?, phone=?, units_consumed=? WHERE customer_id=?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, customer.getAccountNumber());
+            stmt.setString(2, customer.getName());
+            stmt.setString(3, customer.getAddress());
+            stmt.setString(4, customer.getPhone());
+            stmt.setInt(5, customer.getUnitsConsumed());
+            stmt.setInt(6, customer.getCustomerId());
+            return stmt.executeUpdate() > 0;
+        }
+    }
+    
+    
+    //update part one
+    
+    public Customer getCustomerById(int id) throws Exception {
+        Customer customer = null;
+        String sql = "SELECT * FROM customers WHERE customer_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                customer = new Customer();
+                customer.setCustomerId(rs.getInt("customer_id"));
+                customer.setAccountNumber(rs.getString("account_number"));
+                customer.setName(rs.getString("name"));
+                customer.setAddress(rs.getString("address"));
+                customer.setPhone(rs.getString("phone"));
+                customer.setUnitsConsumed(rs.getInt("units_consumed"));
+            }
+        }
+        return customer;
+    }
+    
 
     // Update a customer
-    public boolean updateCustomer(Customer customer) throws Exception {
+    public boolean updateCustomers(Customer customer) throws Exception {
         String sql = "UPDATE customers SET account_number = ?, name = ?, address = ?, phone = ?, units_consumed = ? WHERE customer_id = ?";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {

@@ -73,7 +73,7 @@
             <td><%= c.getUnitsConsumed() %></td>
             <td>
                 
-    <a class="button" href="CustomerManagementServlet?action=edit&id=<%= c.getCustomerId() %>">Edit</a>
+    <a class="button" href="EditCustomerServlet?id=<%= c.getCustomerId() %>">Edit</a>
     <a class="button" href="CustomerManagementServlet?action=delete&id=<%= c.getCustomerId() %>" onclick="return confirm('Are you sure to delete this customer?');">Delete</a>
 
             </td>
