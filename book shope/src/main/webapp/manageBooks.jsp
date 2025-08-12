@@ -78,7 +78,7 @@
     <td>Rs. <%= book.getPrice() %></td>
     
     <td class="actions">
-        <form action="editBook.jsp" method="get" style="display:inline;">
+        <form action="EditBookServlet" method="get" style="display:inline;">
             <input type="hidden" name="id" value="<%= book.getId() %>">
             <button type="submit">Edit</button>
         </form>

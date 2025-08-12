@@ -74,7 +74,7 @@ public class BookDAO {
         return books;
     }
 
-    public Book getBookById(int id) throws Exception {
+    public Book getBookByID(int id) throws Exception {
         String sql = "SELECT * FROM books WHERE id = ?";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -96,7 +96,7 @@ public class BookDAO {
         return null;
     }
 
-    public void updateBook(Book book) throws Exception {
+    public void updateBooks(Book book) throws Exception {
         String sql = "UPDATE books SET name=?, author=?, price=?, image_path=? WHERE id=?";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -109,6 +109,42 @@ public class BookDAO {
         }
         
         
+    }
+    
+    //update part
+    
+    public Book getBookById(int id) throws Exception {
+        String sql = "SELECT * FROM books WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Book book = new Book();
+                book.setId(rs.getInt("id"));
+                book.setName(rs.getString("name"));
+                book.setAuthor(rs.getString("author"));
+                book.setCategory(rs.getString("category"));
+                book.setPrice(rs.getDouble("price"));
+                book.setImagePath(rs.getString("image_path"));
+                return book;
+            }
+        }
+        return null;
+    }
+
+    public boolean updateBook(Book book) throws Exception {
+        String sql = "UPDATE books SET name=?, author=?, category=?, price=?, image_path=? WHERE id=?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, book.getName());
+            ps.setString(2, book.getAuthor());
+            ps.setString(3, book.getCategory());
+            ps.setDouble(4, book.getPrice());
+            ps.setString(5, book.getImagePath());
+            ps.setInt(6, book.getId());
+            return ps.executeUpdate() > 0;
+        }
     }
     
     public List<String> getAllCategories() throws Exception {
