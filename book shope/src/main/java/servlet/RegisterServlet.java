@@ -1,56 +1,38 @@
 package servlet;
 
-import java.io.IOException;
+import controller.RegisterController;
+import controller.RegisterController.RegisterResult;
 
-import dao.CustomerDAO;
-import dao.UserDAO;
-import dto.Customer;
-import dto.User;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
+import java.io.IOException;
 
 public class RegisterServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    private final RegisterController registerController = new RegisterController();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        // If user tries GET, just show registration page
+        req.getRequestDispatcher("register.jsp").forward(req, res);
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        try {
-            String email = req.getParameter("email");
-            String password = req.getParameter("password");
-            String accNum = req.getParameter("accountNumber");
-            String name = req.getParameter("name");
-            String address = req.getParameter("address");
-            String phone = req.getParameter("phone");
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+        String accNum = req.getParameter("accountNumber");
+        String name = req.getParameter("name");
+        String address = req.getParameter("address");
+        String phone = req.getParameter("phone");
 
-            User user = new User();
-            user.setEmail(email);
-            user.setPassword(password);
-            user.setRole("customer");
+        RegisterResult result = registerController.registerCustomer(email, password, accNum, name, address, phone);
 
-            UserDAO userDAO = new UserDAO();
-            int userId = userDAO.insertUser(user);
-
-            if (userId != -1) {
-                Customer customer = new Customer();
-                customer.setUserId(userId);
-                customer.setAccountNumber(accNum);
-                customer.setName(name);
-                customer.setAddress(address);
-                customer.setPhone(phone);
-
-                CustomerDAO customerDAO = new CustomerDAO();
-                customerDAO.insertCustomer(customer);
-                res.sendRedirect("login.jsp");
-            } else {
-                res.sendRedirect("error.jsp");
-                res.getWriter().println("Registration failed. Please try again.");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace(); // Console log
-            req.setAttribute("errorMessage", e.getMessage());
+        if (result.isSuccess()) {
+            res.sendRedirect("login.jsp");
+        } else {
+            req.setAttribute("errorMessage", result.getMessage());
             req.getRequestDispatcher("error.jsp").forward(req, res);
         }
     }
