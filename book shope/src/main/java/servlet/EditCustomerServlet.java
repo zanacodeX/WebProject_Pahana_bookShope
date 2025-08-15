@@ -1,7 +1,7 @@
-
 package servlet;
 
-import dao.CustomerDAO;
+import controller.CustomerController;
+import controller.CustomerController.EditResult;
 import dto.Customer;
 
 import javax.servlet.ServletException;
@@ -11,12 +11,9 @@ import java.io.IOException;
 
 //@WebServlet("/EditCustomerServlet")
 public class EditCustomerServlet extends HttpServlet {
-    
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private CustomerDAO customerDAO = new CustomerDAO();
+    private static final long serialVersionUID = 1L;
+
+    private final CustomerController controller = new CustomerController();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -24,11 +21,17 @@ public class EditCustomerServlet extends HttpServlet {
         if (idParam != null) {
             try {
                 int id = Integer.parseInt(idParam);
-                Customer customer = customerDAO.getCustomerById(id);
-                request.setAttribute("customer", customer);
-                request.getRequestDispatcher("editCustomer.jsp").forward(request, response);
-            } catch (Exception e) {
-                throw new ServletException(e);
+                EditResult result = controller.getCustomerById(id);
+
+                if (result.isSuccess()) {
+                    request.setAttribute("customer", result.getCustomer());
+                    request.getRequestDispatcher("editCustomer.jsp").forward(request, response);
+                } else {
+                    request.setAttribute("error", result.getMessage());
+                    response.sendRedirect("manageCustomers.jsp");
+                }
+            } catch (NumberFormatException e) {
+                response.sendRedirect("manageCustomers.jsp");
             }
         } else {
             response.sendRedirect("manageCustomers.jsp");
@@ -38,27 +41,21 @@ public class EditCustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            int id = Integer.parseInt(request.getParameter("customerId"));
-            String accountNumber = request.getParameter("accountNumber");
-            String name = request.getParameter("name");
-            String address = request.getParameter("address");
-            String phone = request.getParameter("phone");
-            int unitsConsumed = Integer.parseInt(request.getParameter("unitsConsumed"));
-
             Customer customer = new Customer();
-            customer.setCustomerId(id);
-            customer.setAccountNumber(accountNumber);
-            customer.setName(name);
-            customer.setAddress(address);
-            customer.setPhone(phone);
-            customer.setUnitsConsumed(unitsConsumed);
+            customer.setCustomerId(Integer.parseInt(request.getParameter("customerId")));
+            customer.setAccountNumber(request.getParameter("accountNumber"));
+            customer.setName(request.getParameter("name"));
+            customer.setAddress(request.getParameter("address"));
+            customer.setPhone(request.getParameter("phone"));
+            customer.setUnitsConsumed(Integer.parseInt(request.getParameter("unitsConsumed")));
 
-            boolean updated = customerDAO.updateCustomer(customer);
-            if (updated) {
+            EditResult result = controller.updateCustomer(customer);
+
+            if (result.isSuccess()) {
                 response.sendRedirect("manageCustomers.jsp");
             } else {
-                request.setAttribute("error", "Failed to update customer.");
-                request.setAttribute("customer", customer);
+                request.setAttribute("error", result.getMessage());
+                request.setAttribute("customer", result.getCustomer());
                 request.getRequestDispatcher("editCustomer.jsp").forward(request, response);
             }
         } catch (Exception e) {

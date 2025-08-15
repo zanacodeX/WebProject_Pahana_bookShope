@@ -1,42 +1,44 @@
 package servlet;
 
-import java.io.IOException;
+import controller.BookController;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.*;
-
-import dao.BookDAO;
-import dto.Book;
+import java.io.IOException;
 
 @MultipartConfig
 public class AddBookServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+    private final BookController bookController = new BookController();
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1. Read form fields
-        String name = request.getParameter("name");
-        String author = request.getParameter("author");
-        String category = request.getParameter("category");
-        double price = Double.parseDouble(request.getParameter("price"));
+        try {
+            // Read form fields
+            String name = request.getParameter("name");
+            String author = request.getParameter("author");
+            String category = request.getParameter("category");
+            double price = Double.parseDouble(request.getParameter("price"));
+            String imageUrl = request.getParameter("imageUrl");
 
-        // 2. Get image URL from input
-        String imageUrl = request.getParameter("imageUrl");
+            // Call controller to add book
+            BookController.BookResult result = bookController.addBook(name, author, category, price, imageUrl);
 
-        // 3. Save book to DB
-        Book book = new Book();
-        book.setName(name);
-        book.setAuthor(author);
-        book.setCategory(category);
-        book.setPrice(price);
-        book.setImagePath(imageUrl);  // saving image URL directly
+            if (result.isSuccess()) {
+                response.sendRedirect("manageBooks.jsp");
+            } else {
+                request.setAttribute("error", result.getMessage());
+                request.getRequestDispatcher("addBook.jsp").forward(request, response);
+            }
 
-        BookDAO dao = new BookDAO();
-        dao.insertBook(book);
-
-        // 4. Redirect back to dashboard
-        response.sendRedirect("manageBooks.jsp");
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Error processing book addition: " + e.getMessage());
+            request.getRequestDispatcher("addBook.jsp").forward(request, response);
+        }
     }
 }
