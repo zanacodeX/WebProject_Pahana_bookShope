@@ -1,19 +1,16 @@
 package servlet;
 
-import java.io.IOException;
+import controller.LoginController;
+import controller.LoginController.LoginResult;
 
-import dao.CustomerDAO;
-import dao.UserDAO;
-import dto.Customer;
-import dto.User;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
+import java.io.IOException;
 
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+
+    private final LoginController loginController = new LoginController();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -21,26 +18,17 @@ public class LoginServlet extends HttpServlet {
         String password = req.getParameter("password");
 
         try {
-            UserDAO userDAO = new UserDAO();
-            User user = userDAO.validateUser(email, password);
+            LoginResult result = loginController.login(email, password);
 
-            if (user != null) {
+            if (result != null) {
                 HttpSession session = req.getSession();
-                session.setAttribute("user", user);
-               
-                
-                System.out.println("User ID from session: " + user.getUserId());
-                System.out.println("Login role: " + user.getRole());
+                session.setAttribute("user", result.getUser());
 
-                if ("admin".equalsIgnoreCase(user.getRole())) {
-                    System.out.println("Redirecting to adminDashboard.jsp");
-                    res.sendRedirect("adminDashboard.jsp");
-                } else {
-                    CustomerDAO customerDAO = new CustomerDAO();
-                    Customer customer = customerDAO.getCustomerByUserId(user.getUserId());
-                    session.setAttribute("customer", customer);
-                    res.sendRedirect("customerDashboard");
+                if (result.getCustomer() != null) {
+                    session.setAttribute("customer", result.getCustomer());
                 }
+
+                res.sendRedirect(result.getRedirectPage());
             } else {
                 req.setAttribute("error", "Invalid credentials!");
                 req.getRequestDispatcher("login.jsp").forward(req, res);
@@ -48,7 +36,6 @@ public class LoginServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             res.sendRedirect("error.jsp");
-            res.getWriter().println("login failed. Please try again.");
         }
     }
 }
