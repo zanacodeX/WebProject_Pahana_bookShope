@@ -4,8 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Login</title>
-
+<title>Add Customer</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -42,16 +41,22 @@
         padding: 30px 40px;
         border-radius: 12px;
         box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-        width: 320px;
+        width: 350px;
         position: relative;
     }
-   
-    
+
+    form h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
     input[type="text"],
-    input[type="password"] {
+    input[type="password"],
+    input[type="email"] {
         width: 100%;
         padding: 12px;
-        margin: 8px 0 20px;
+        margin: 6px 0 12px;
         border: 1px solid #ccc;
         border-radius: 8px;
         box-sizing: border-box;
@@ -80,40 +85,62 @@
         font-weight: bold;
         transition: background-color 0.3s ease;
     }
+    
+     
 
     input[type="submit"]:hover {
         background-color: #45a049;
     }
 
-    .register-link {
+    .login-link {
         margin-top: 15px;
         text-align: center;
         font-size: 14px;
     }
 
-    .register-link a {
+    .login-link a {
         color: #4a90e2;
         text-decoration: none;
         font-weight: bold;
     }
 
-    .register-link a:hover {
+    .login-link a:hover {
         text-decoration: underline;
+    }
+    .back-btn-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .back-btn-container button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+
+    .back-btn-container button:hover {
+        background-color: #45a049;
     }
 </style>
 </head>
-
 <body>
 
-    <!-- Close button to go back -->
+    <!-- Close button -->
     
 
-    <form action="login" method="post">
-    <a href="landing.jsp" class="close-btn" title="Go to Home">✖</a>
-        <h2 style="text-align:center; margin-bottom: 20px; color:#333;">Login</h2>
+    <form action="addCustomer" method="post">
+     
+    <a href="adminDashboard.jsp" class="close-btn" title="Go to Home">✖</a>
+        <h2>Register</h2>
 
         Email:
-        <input type="text" name="email" required>
+        <input type="email" name="email" required>
 
         Password:
         <div class="password-container">
@@ -121,21 +148,25 @@
             <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
         </div>
 
-        <input type="submit" value="Login">
-        
-        <!-- ✅ Show error here -->
-    <%
-        String errorMessage = (String) request.getAttribute("errorMessage");
-        if (errorMessage != null) {
-    %>
-        <p style="color:red; text-align:center; margin-top:10px;"><%= errorMessage %></p>
-    <%
-        }
-    %>
+        Account No:
+        <input type="text" name="accountNumber" required>
 
-        <div class="register-link">
-            Don't have an account? <a href="register.jsp">Register</a>
-        </div>
+        Name:
+        <input type="text" name="name">
+
+        Address:
+        <input type="text" name="address">
+
+        Phone:
+        <input type="text" name="phone">
+
+        <input type="submit" value="ADD NEW CUSTOMER">
+
+        <div class="back-button">
+    <a href="adminDashboard.jsp" class="back-btn-container">
+        <button type="button">Back to Dashboard</button>
+    </a>
+</div>
     </form>
 
     <script>

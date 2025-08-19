@@ -8,9 +8,24 @@
     BookDAO dao = new BookDAO();
     List<Book> books = dao.getAllBooks();
 
-    Customer customer = (Customer) request.getAttribute("customer");
+   
     String userEmail = (String) session.getAttribute("userEmail");
     boolean isLoggedIn = (userEmail != null);
+%>
+
+<%
+    // First check if customer is in request (from servlet)
+    Customer customer = (Customer) request.getAttribute("customer");
+
+    // If not found in request, try from session
+    if (customer == null) {
+        customer = (Customer) session.getAttribute("customer");
+    }
+
+    // If found in request (first time load), store it in session for later
+    if (request.getAttribute("customer") != null) {
+        session.setAttribute("customer", request.getAttribute("customer"));
+    }
 %>
 
 <!DOCTYPE html>
@@ -19,7 +34,26 @@
     <meta charset="UTF-8">
     <title>Customer Dashboard</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+         
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f9fc;
+            
+     
+    background-image: url("<%= request.getContextPath() %>/image/icon.jpeg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center; 
+         
+       background-filter: brightness(0.4);/* Centers the image */
+    background-attachment: fixed; 
+    background-z-index: -1;
+   
+        
+        
+        }
 
         .navbar {
             background-color: #333;
@@ -76,6 +110,7 @@
         }
 
         .book-card {
+        background-color: #ffffff;
             border: 1px solid #ccc;
             margin: 10px;
             padding: 10px;
@@ -83,6 +118,8 @@
             text-align: center;
             display: inline-block;
         }
+        .book-card:hover {
+            transform: translateY(-5px);}
 
         .book-card img {
             width: 100%;
@@ -105,6 +142,10 @@
             cursor: pointer;
             margin-top: 10px;
         }
+        
+        h2 {
+            
+            color: Yellow;}
 
         .cart-button:hover {
             background-color: #218838;
@@ -117,7 +158,7 @@
 <div class="navbar">
     <div>
         <a href="customerDashboard.jsp">Dashboard</a>
-        <a href="customerOrderStatus"> Orders Status</a>
+        <a href="customerOrderStatus"> Order Status</a>
         <a href="completedOrders">Completed Orders</a>
     </div>
     <div>
@@ -127,8 +168,13 @@
         <% if (isLoggedIn) { %>
             | <a href="LogoutServlet">Logout</a>
         <% } else { %>
-            | <a href="login.jsp">Login</a>
-            <a href="register.jsp">Register</a>
+            | <a href="landing.jsp" onclick="return confirmLogout();">Logout</a>
+            <script>
+    function confirmLogout() {
+        return confirm("Are you sure you want to log out?");
+    }
+</script>
+            
         <% } %>
     </div>
 </div>
@@ -146,6 +192,18 @@
     <% } else { %>
         <p>No customer data available.</p>
     <% } %>
+    
+    
+    
+    <script>
+    // Reload when page is restored from back/forward navigation
+    window.addEventListener("pageshow", function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+</script>
+
 </div>
 
 <!-- BOOK LISTING -->

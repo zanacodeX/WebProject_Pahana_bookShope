@@ -7,27 +7,115 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
+
 <meta charset="UTF-8">
     <title>Manage Books</title>
     <style>
-        body { font-family: Arial; padding: 20px; }
-        h2 { color: #333; }
-        .form-container, .table-container { margin-bottom: 30px; }
-        input, select { padding: 5px; margin: 5px 0; width: 100%; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        table, th, td { border: 1px solid #ccc; }
-        th, td { padding: 10px; text-align: center; }
-        img { width: 60px; height: auto; }
-        .actions button { margin: 0 5px; }
+        body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f4f6f9;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background: #2c3e50;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        position: relative;
+    }
+    header h2 {
+        margin: 0;
+        font-size: 28px;
+    }
+    .back-btn {
+        position: absolute;
+        left: 20px;
+        top: 15px;
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+    .back-btn:hover {
+        background: #2980b9;
+    }
+    .container {
+        width: 90%;
+        max-width: 1100px;
+        margin: 30px auto;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .form-container {
+        margin-bottom: 20px;
+    }
+    input[type="text"], input[type="submit"], button {
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+    input[type="text"] {
+        width: 70%;
+    }
+    input[type="submit"], button {
+        background: #27ae60;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    input[type="submit"]:hover, button:hover {
+        background: #219150;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th {
+        background: #34495e;
+        color: white;
+    }
+    th, td {
+        padding: 12px;
+        text-align: center;
+    }
+    img {
+        width: 60px;
+        height: auto;
+        border-radius: 5px;
+    }
+    .actions button {
+        background: #e74c3c;
+        margin: 0 5px;
+    }
+    .actions button:first-child {
+        background: #f39c12;
+    }
+    .actions button:hover {
+        opacity: 0.85;
+    }
     </style>
 </head>
 <body>
-
+<header>
+    <form action="adminDashboard.jsp" method="get" style="display:inline;">
+        <button type="submit" class="back-btn">← Back</button>
+    </form>
     <h2>Manage Books</h2>
-
+</header>
     <!-- Add Book Form -->
     <div class="form-container">
     <form action="addBook.jsp" method="get">

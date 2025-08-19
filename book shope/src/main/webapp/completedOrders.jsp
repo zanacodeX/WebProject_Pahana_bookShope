@@ -10,29 +10,77 @@
     <meta charset="UTF-8">
     <title>Completed Orders</title>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
         }
-        th, td {
-            border: 1px solid #999;
-            padding: 8px 12px;
+
+        h2 {
             text-align: center;
+            color: #333;
+            margin-bottom: 20px;
         }
+
+        table {
+            width: 90%;
+            margin: 0 auto 20px auto;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
         th {
-            background-color: #eee;
-        }
-        .btn-print {
             background-color: #4CAF50;
             color: white;
-            border: none;
-            padding: 6px 12px;
-            cursor: pointer;
-            border-radius: 4px;
         }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn-print {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
         .btn-print:hover {
-            background-color: #45a049;
+            background-color: #1976D2;
+        }
+
+        .back-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-button button {
+            background-color: #ff5722;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .back-button button:hover {
+            background-color: #e64a19;
         }
     </style>
 </head>
@@ -75,8 +123,15 @@
         <% } %>
         </tbody>
     </table>
+
+    <div class="back-button">
+        <a href="customerDashboard.jsp">
+            <button type="button">Back to Dashboard</button>
+        </a>
+    </div>
+
     <% } else { %>
-        <p>No completed orders found.</p>
+        <p style="text-align:center; color:red;">No completed orders found.</p>
     <% } %>
 </body>
 </html>

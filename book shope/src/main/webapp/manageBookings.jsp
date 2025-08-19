@@ -6,34 +6,111 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Manage Bookings</title>
+    <title>Manage Orders</title>
     <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+        header h2 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 15px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .back-btn:hover {
+            background: #2980b9;
+        }
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 250px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        input[type="submit"] {
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: none;
+            background: #27ae60;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        input[type="submit"]:hover {
+            background: #219150;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th {
+            background: #34495e;
+            color: white;
         }
         th, td {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: left;
-        }
-        input[type="text"] {
-            padding: 8px;
-            width: 250px;
+            padding: 12px;
+            text-align: center;
         }
         .action-btn {
             padding: 6px 12px;
             margin: 2px;
             border: none;
             cursor: pointer;
+            border-radius: 5px;
+            font-size: 13px;
         }
-        .confirm { background-color: #4CAF50; color: white; }
-        .decline { background-color: #f44336; color: white; }
+        .confirm { background-color: #27ae60; color: white; }
+        .decline { background-color: #e74c3c; color: white; }
+        .confirm:hover { background-color: #219150; }
+        .decline:hover { background-color: #c0392b; }
     </style>
 </head>
 <body>
 
-<h2>Pending Bookings</h2>
+<header>
+    <form action="adminDashboard.jsp" method="get" style="display:inline;">
+        <button type="submit" class="back-btn">← Back</button>
+    </form>
+    <h2>Manage Orders</h2>
+</header>
 
 <form method="get" action="manageBookings.jsp">
     <input type="text" name="search" placeholder="Search by customer name" value="<%= request.getParameter("search") != null ? request.getParameter("search") : "" %>"/>
