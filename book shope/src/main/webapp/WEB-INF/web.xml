@@ -59,6 +59,15 @@
     <url-pattern>/addBook</url-pattern>
 </servlet-mapping>
 
+<servlet>
+    <servlet-name>AddCustomerServlet</servlet-name>
+    <servlet-class>servlet.AddCustomerServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>AddCustomerServlet</servlet-name>
+    <url-pattern>/addCustomer</url-pattern>
+  </servlet-mapping>
 
 
 <servlet>
